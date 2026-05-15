@@ -17,7 +17,7 @@
             --gold: #D4AF37;
             --gold-light: #F3E5AB;
             --dark: #030303;
-            --panel: rgba(20, 20, 20, 0.6);
+            --panel: rgba(20, 20, 20, 0.7);
             --neon-cyan: #00F2FE;
         }
 
@@ -105,16 +105,16 @@
             background: var(--panel);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 4px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
             transition: all 0.4s ease;
         }
 
         .glass-panel:hover {
-            border-color: rgba(212, 175, 55, 0.5);
+            border-color: rgba(212, 175, 55, 0.8);
             transform: translateY(-5px);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.1);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), 0 0 25px rgba(212,175,55,0.2);
         }
 
         .gold-text {
@@ -127,9 +127,9 @@
         .ticker-wrap {
             width: 100%;
             overflow: hidden;
-            background: rgba(0,0,0,0.8);
-            border-top: 1px solid rgba(212,175,55,0.2);
-            border-bottom: 1px solid rgba(212,175,55,0.2);
+            background: rgba(0,0,0,0.9);
+            border-top: 1px solid rgba(212,175,55,0.3);
+            border-bottom: 1px solid rgba(212,175,55,0.3);
             padding: 12px 0;
             white-space: nowrap;
         }
@@ -143,31 +143,44 @@
         }
 
         /* Founder Image Enhancements */
+        .founder-frame {
+            position: relative;
+            padding: 8px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.4), rgba(0,0,0,0.9), rgba(212,175,55,0.2));
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            /* GUARANTEE VISIBILITY */
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+
         .founder-img-wrapper {
             position: relative;
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            aspect-ratio: 3/4;
+            background-color: #111; /* Fallback color if image is missing */
         }
         
         .founder-img-wrapper::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, #030303 10%, transparent 50%, rgba(212,175,55,0.1) 100%);
+            background: linear-gradient(to top, #000000 5%, transparent 40%, rgba(212,175,55,0.05) 100%);
             pointer-events: none;
         }
 
         .founder-image-styled {
-            /* Enhancing the provided image */
-            filter: contrast(1.15) brightness(1.05) saturate(1.1);
-            transition: filter 0.5s ease, transform 0.7s ease;
+            filter: contrast(1.1) brightness(1.05) saturate(1.1) drop-shadow(0 0 10px rgba(0,0,0,0.5));
+            transition: filter 0.6s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            object-position: center top; 
         }
         
-        .founder-img-wrapper:hover .founder-image-styled {
-            filter: contrast(1.2) brightness(1.1) saturate(1.2);
-            transform: scale(1.03);
+        .founder-frame:hover .founder-image-styled {
+            filter: contrast(1.15) brightness(1.1) saturate(1.15);
+            transform: scale(1.04);
         }
 
         /* Glowing Button */
@@ -258,12 +271,8 @@
                         <stop offset="50%" stop-color="#D4AF37" />
                         <stop offset="100%" stop-color="#996515" />
                     </linearGradient>
-                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur stdDeviation="3" result="blur" />
-                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                    </filter>
                 </defs>
-                <path d="M50 5L89 27.5V72.5L50 95L11 72.5V27.5L50 5Z" stroke="url(#goldNav)" stroke-width="3" fill="rgba(212,175,55,0.05)" filter="url(#glow)"/>
+                <path d="M50 5L89 27.5V72.5L50 95L11 72.5V27.5L50 5Z" stroke="url(#goldNav)" stroke-width="3" fill="rgba(212,175,55,0.05)"/>
                 <path d="M35 65V35L65 65V35" stroke="url(#goldNav)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M65 35H45M65 35V55" stroke="url(#goldNav)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -300,15 +309,11 @@
                 </p>
                 <div class="flex flex-wrap items-center gap-6">
                     <a href="#plans" class="cyber-btn cyber-btn-solid text-black">Start Your Trading Journey</a>
-                    <a href="#platform" class="text-xs tracking-widest uppercase hover:text-[#D4AF37] transition flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Explore Edge
-                    </a>
                 </div>
             </div>
 
             <div class="md:col-span-5 relative h-[500px] hidden md:block hero-widgets">
-                <div class="absolute top-10 right-0 glass-panel p-6 w-72 transform rotate-2 hover:rotate-0 z-20">
+                <div class="absolute top-10 right-0 glass-panel p-6 w-72 transform rotate-2 z-20">
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-[10px] tracking-widest text-white/50">F&O ALGO SIGNAL</span>
                         <span class="text-green-400 text-xs font-bold">BULLISH</span>
@@ -323,7 +328,7 @@
                     </div>
                 </div>
                 
-                <div class="absolute bottom-20 left-10 glass-panel p-6 w-80 transform -rotate-3 hover:rotate-0 z-30">
+                <div class="absolute bottom-20 left-10 glass-panel p-6 w-80 transform -rotate-3 z-30">
                     <div class="flex items-center space-x-4 mb-6">
                         <div class="w-10 h-10 rounded-full border border-[#D4AF37] flex items-center justify-center">
                             <svg class="w-5 h-5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -363,9 +368,6 @@
                     <p class="text-[#D4AF37] tracking-[0.3em] text-xs mb-4 uppercase">The Edge</p>
                     <h2 class="text-4xl md:text-6xl font-bold mb-4">A NEW STANDARD IN <br><span class="text-white/30">MARKET ANALYSIS</span></h2>
                 </div>
-                <p class="text-white/50 max-w-md text-sm leading-relaxed pb-2">
-                    We don't just follow trends; we identify the footprints of institutional capital to position our clients ahead of the curve.
-                </p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
@@ -373,78 +375,74 @@
                     <div class="w-14 h-14 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-6 border border-[#D4AF37]/30">
                         <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     </div>
-                    <h4 class="text-xl font-bold mb-4 brand-font">Institutional Flow</h4>
-                    <p class="text-white/50 text-sm leading-relaxed">Decode order book imbalances and track smart money movements to execute trades with mathematical precision.</p>
+                    <h4 class="text-xl font-bold mb-4 brand-font text-white">Institutional Flow</h4>
+                    <p class="text-white/70 text-sm leading-relaxed">Decode order book imbalances and track smart money movements to execute trades with mathematical precision.</p>
                 </div>
                 
                 <div class="glass-panel p-10">
                     <div class="w-14 h-14 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-6 border border-[#D4AF37]/30">
                         <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <h4 class="text-xl font-bold mb-4 brand-font">Risk Management</h4>
-                    <p class="text-white/50 text-sm leading-relaxed">Every setup is accompanied by strict RR (Risk-to-Reward) frameworks, ensuring capital preservation is always the priority.</p>
+                    <h4 class="text-xl font-bold mb-4 brand-font text-white">Risk Management</h4>
+                    <p class="text-white/70 text-sm leading-relaxed">Every setup is accompanied by strict RR frameworks, ensuring capital preservation is always the priority.</p>
                 </div>
 
                 <div class="glass-panel p-10">
                     <div class="w-14 h-14 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-6 border border-[#D4AF37]/30">
                         <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                     </div>
-                    <h4 class="text-xl font-bold mb-4 brand-font">Live Community</h4>
-                    <p class="text-white/50 text-sm leading-relaxed">Join a highly curated, premium ecosystem of dedicated traders navigating live market hours together.</p>
+                    <h4 class="text-xl font-bold mb-4 brand-font text-white">Live Community</h4>
+                    <p class="text-white/70 text-sm leading-relaxed">Join a highly curated, premium ecosystem of dedicated traders navigating live market hours together.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="plans" class="py-32 relative z-10 bg-black/40 border-y border-[#D4AF37]/10">
+    <section id="plans" class="py-32 relative z-20 bg-black/90 border-y border-[#D4AF37]/30">
         <div class="max-w-[90rem] mx-auto px-10">
             <div class="text-center mb-20">
                 <p class="text-[#D4AF37] tracking-[0.3em] text-xs mb-4 uppercase font-bold">Start Your Trading Journey</p>
                 <h2 class="text-4xl md:text-6xl font-bold mb-6 brand-font">ELITE TRADING <span class="gold-text">PLANS</span></h2>
-                <p class="text-white/50 max-w-2xl mx-auto text-sm leading-relaxed">
-                    Choose the architecture that fits your capital size and time commitment. Every plan is engineered for maximum yield and rigorous risk control.
-                </p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37] rounded-full blur-[80px] opacity-10 group-hover:opacity-30 transition duration-500"></div>
-                    <h3 class="text-2xl font-bold mb-2 brand-font">Swing Trade</h3>
-                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6">Medium Term • High Conviction</p>
-                    <p class="text-white/60 text-sm mb-8 flex-grow">Designed for those who cannot watch screens all day. We capture large, multi-day to multi-week price movements based on structural shifts.</p>
-                    <ul class="space-y-4 mb-10 text-sm text-white/80">
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> 2-4 Premium Setups Weekly</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Detailed Entry/Exit Targets</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Chart Pattern Breakdowns</li>
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                
+                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group bg-[#0a0a0a]">
+                    <h3 class="text-2xl font-bold mb-2 brand-font text-white">Swing Trade</h3>
+                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6 font-bold">Medium Term</p>
+                    <p class="text-white/80 text-sm mb-8 flex-grow">Designed for those who cannot watch screens all day. Capture multi-day to multi-week price movements.</p>
+                    <ul class="space-y-4 mb-10 text-sm text-white font-medium">
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> 2-4 Premium Setups Weekly</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Detailed Entry/Exit Targets</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Chart Pattern Breakdowns</li>
                     </ul>
                     <button class="cyber-btn w-full text-center">Select Plan</button>
                 </div>
 
-                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group border-[#D4AF37]/50 transform md:-translate-y-4 shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group border-[#D4AF37] border-2 transform md:-translate-y-4 shadow-[0_0_40px_rgba(212,175,55,0.4)] bg-[#111111]">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515]"></div>
-                    <div class="absolute top-0 right-0 bg-[#D4AF37] text-black text-[10px] font-bold px-3 py-1 uppercase tracking-widest">Most Popular</div>
+                    <div class="absolute top-0 right-0 bg-[#D4AF37] text-black text-[10px] font-bold px-4 py-1.5 uppercase tracking-widest">Most Popular</div>
                     
-                    <h3 class="text-2xl font-bold mb-2 brand-font">Composite Trade</h3>
-                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6">Portfolio Approach • Diversified</p>
-                    <p class="text-white/60 text-sm mb-8 flex-grow">The ultimate blend. Combines aggressive short-term plays with stable, long-term equity positioning to balance your wealth accumulation.</p>
-                    <ul class="space-y-4 mb-10 text-sm text-white/80">
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Equity & F&O Blend</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Live Market Commentary</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Portfolio Hedging Strategies</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Priority Support Access</li>
+                    <h3 class="text-3xl font-bold mb-2 brand-font text-white mt-4">Composite Trade</h3>
+                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6 font-bold">Portfolio Approach</p>
+                    <p class="text-white/90 text-sm mb-8 flex-grow">The ultimate blend. Combines aggressive short-term plays with stable, long-term equity positioning.</p>
+                    <ul class="space-y-4 mb-10 text-sm text-white font-medium">
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Equity & F&O Blend</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Live Market Commentary</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Portfolio Hedging Strategies</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Priority Support Access</li>
                     </ul>
                     <button class="cyber-btn cyber-btn-solid w-full text-center">Select Plan</button>
                 </div>
 
-                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group">
-                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-[var(--neon-cyan)] rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition duration-500"></div>
-                    <h3 class="text-2xl font-bold mb-2 brand-font">Intraday F&O</h3>
-                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6">High Frequency • Leveraged</p>
-                    <p class="text-white/60 text-sm mb-8 flex-grow">Pure, unadulterated alpha. Capitalize on daily market volatility in Nifty & BankNifty using our precision momentum algorithms.</p>
-                    <ul class="space-y-4 mb-10 text-sm text-white/80">
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Daily Live Index Trades</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Options Buying/Selling Levels</li>
-                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Expiry Day Hero-Zero Plays</li>
+                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group bg-[#0a0a0a]">
+                    <h3 class="text-2xl font-bold mb-2 brand-font text-white">Intraday F&O</h3>
+                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6 font-bold">High Frequency</p>
+                    <p class="text-white/80 text-sm mb-8 flex-grow">Pure, unadulterated alpha. Capitalize on daily market volatility in Nifty & BankNifty.</p>
+                    <ul class="space-y-4 mb-10 text-sm text-white font-medium">
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Daily Live Index Trades</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Options Buying/Selling Levels</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3 font-bold">✔</span> Expiry Day Hero-Zero Plays</li>
                     </ul>
                     <button class="cyber-btn w-full text-center">Select Plan</button>
                 </div>
@@ -452,67 +450,54 @@
         </div>
     </section>
 
-    <section id="founder" class="py-32 relative z-10 overflow-hidden">
-        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-full bg-gradient-to-l from-[#D4AF37]/5 to-transparent pointer-events-none"></div>
-        
+    <section id="founder" class="py-32 relative z-10 overflow-hidden bg-black">
         <div class="max-w-[90rem] mx-auto px-10">
             <div class="grid md:grid-cols-12 gap-16 items-center">
                 
-                <div class="md:col-span-5 relative order-2 md:order-1" id="founder-img-anim">
-                    <div class="absolute -inset-4 border border-[#D4AF37]/20 rounded-lg hidden md:block"></div>
-                    <div class="absolute -inset-1 border border-[#D4AF37]/50 rounded-sm hidden md:block translate-x-4 translate-y-4"></div>
-                    
-                    <div class="founder-img-wrapper aspect-[3/4] w-full max-w-md mx-auto z-10">
-                        <img src="image_d25e74.jpg" alt="Founder Neha - Trade With Neha" class="w-full h-full object-cover founder-image-styled">
-                        
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-[#D4AF37] text-[10px] tracking-[0.2em] uppercase font-bold mb-1">Based In</p>
-                                    <p class="font-bold tracking-wider text-sm text-white">INDORE, MP, INDIA</p>
-                                </div>
-                                <div class="w-10 h-10 rounded-full border border-[#D4AF37]/50 flex items-center justify-center backdrop-blur-sm">
-                                    <span class="brand-font text-lg text-[#D4AF37]">N</span>
+                <div class="md:col-span-5 relative order-2 md:order-1">
+                    <div class="founder-frame w-full max-w-sm mx-auto">
+                        <div class="relative rounded-lg overflow-hidden" style="aspect-ratio: 3/4;">
+                            
+                            <img src="image_d20060.jpg" alt="Founder Neha" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[#D4AF37] text-[10px] tracking-[0.2em] uppercase font-bold mb-1">Based In</p>
+                                        <p class="font-bold tracking-wider text-sm text-white drop-shadow-md">INDORE, MP, INDIA</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="md:col-span-7 founder-text order-1 md:order-2 pl-0 md:pl-10">
+                <div class="md:col-span-7 order-1 md:order-2 pl-0 md:pl-10">
                     <div class="flex items-center space-x-4 mb-6">
                         <div class="w-16 h-[2px] bg-[#D4AF37]"></div>
                         <span class="text-[#D4AF37] tracking-[0.3em] text-sm uppercase font-bold">Meet The Visionary</span>
                     </div>
                     
-                    <h2 class="text-5xl md:text-7xl font-bold mb-2 brand-font">NEHA</h2>
-                    <p class="text-xl text-white/50 font-light italic mb-10 brand-font">Founder & Chief Market Strategist</p>
+                    <h2 class="text-5xl md:text-7xl font-bold mb-2 brand-font text-white">NEHA</h2>
+                    <p class="text-xl text-[#D4AF37] font-light italic mb-10 brand-font">Founder & Chief Market Strategist</p>
                     
-                    <div class="space-y-6 text-white/70 font-light leading-relaxed mb-12 text-base">
-                        <p class="text-lg text-white font-medium border-l-2 border-[#D4AF37] pl-6 py-2 bg-gradient-to-r from-[#D4AF37]/10 to-transparent">
+                    <div class="space-y-6 text-white/80 font-light leading-relaxed mb-12 text-base">
+                        <p class="text-lg text-white font-medium border-l-2 border-[#D4AF37] pl-6 py-2 bg-gradient-to-r from-[#D4AF37]/20 to-transparent">
                             "Trading is not about predicting the future; it is about executing a flawless edge when the present aligns with our mathematical probabilities."
                         </p>
                         <p>
                             Operating out of the thriving hub of Indore, Madhya Pradesh, Neha has established a reputation for absolute precision in the financial markets. What began as a personal pursuit of market mastery has evolved into a premium institutional-grade trading ecosystem.
                         </p>
                         <p>
-                            Specializing in deep order-flow analysis and dynamic risk structuring, Neha developed the proprietary frameworks that power our <strong>Intraday F&O</strong>, <strong>Swing</strong>, and <strong>Composite</strong> trading plans. Her philosophy is built on removing emotion from the charts, protecting capital ruthlessly, and striking only when the setup offers a massive asymmetrical advantage.
+                            Specializing in deep order-flow analysis and dynamic risk structuring, Neha developed the proprietary frameworks that power our trading plans. Her philosophy is built on removing emotion from the charts, protecting capital ruthlessly, and striking only when the setup offers a massive asymmetrical advantage.
                         </p>
-                    </div>
-                    
-                    <div class="flex items-center space-x-6">
-                        <a href="#plans" class="cyber-btn cyber-btn-solid text-black">Trade Alongside Neha</a>
-                        <div class="flex space-x-4 text-white/40">
-                            <a href="#" class="hover:text-[#D4AF37] transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
-                            <a href="#" class="hover:text-[#D4AF37] transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-16 relative z-10 bg-[#020202] border-t border-[#D4AF37]/20">
+    <footer class="py-16 relative z-10 bg-[#020202] border-t border-[#D4AF37]/30">
         <div class="max-w-[90rem] mx-auto px-10">
             <div class="flex flex-col md:flex-row justify-between items-center mb-10">
                 <div class="flex items-center space-x-3 mb-6 md:mb-0 opacity-70 hover:opacity-100 transition duration-300 cursor-pointer" onclick="window.scrollTo(0,0)">
@@ -530,16 +515,15 @@
                 <div class="flex space-x-8 text-xs tracking-widest uppercase font-semibold text-white/50">
                     <a href="#plans" class="hover:text-[#D4AF37] transition">Start Trading</a>
                     <a href="#" class="hover:text-[#D4AF37] transition">Disclaimer</a>
-                    <a href="#" class="hover:text-[#D4AF37] transition">Terms</a>
                     <a href="#" class="hover:text-[#D4AF37] transition">Support</a>
                 </div>
             </div>
             
-            <div class="border-t border-white/5 pt-8 text-center flex flex-col items-center">
-                <p class="text-[10px] text-white/30 tracking-widest uppercase mb-2">
+            <div class="border-t border-white/10 pt-8 text-center flex flex-col items-center">
+                <p class="text-[10px] text-white/40 tracking-widest uppercase mb-2">
                     © 2026 TRADE WITH NEHA. ALL RIGHTS RESERVED.
                 </p>
-                <p class="text-[10px] text-[#D4AF37]/50 tracking-widest uppercase font-bold">
+                <p class="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">
                     HEADQUARTERS: INDORE, MADHYA PRADESH, INDIA.
                 </p>
             </div>
@@ -547,24 +531,20 @@
     </footer>
 
     <script>
-        // --- Custom Cursor Logic ---
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
         
         window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
             
             cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 300, fill: "forwards" });
         });
 
-        const links = document.querySelectorAll('a, button, .glass-panel, svg');
+        const links = document.querySelectorAll('a, button');
         links.forEach(link => {
             link.addEventListener('mouseenter', () => {
                 cursorOutline.style.width = '60px';
@@ -578,118 +558,64 @@
             });
         });
 
-        // --- Preloader & GSAP Initialization ---
-        gsap.registerPlugin(ScrollTrigger);
-
+        // Preloader Logic
         let progress = 0;
         const progressBar = document.getElementById('progress-bar');
         const loadingText = document.getElementById('loading-text');
         
         const loaderInterval = setInterval(() => {
-            progress += Math.floor(Math.random() * 15) + 1;
+            progress += Math.floor(Math.random() * 20) + 5;
             if(progress >= 100) {
                 progress = 100;
                 clearInterval(loaderInterval);
-                setTimeout(initSiteAnimations, 300); // slight delay before hiding
+                
+                // Hide preloader
+                gsap.to("#preloader", {
+                    yPercent: -100,
+                    duration: 1,
+                    ease: "power4.inOut"
+                });
+
+                gsap.from(".hero-text > *", {
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: "power2.out",
+                    delay: 0.5
+                });
+                
+                gsap.from(".hero-widgets > div", {
+                    scale: 0.9,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: "back.out(1.5)",
+                    delay: 0.5
+                });
+
+                gsap.from(".bar-grow", {
+                    scaleY: 0,
+                    duration: 1.2,
+                    stagger: 0.1,
+                    ease: "power3.out",
+                    delay: 1.5
+                });
             }
             progressBar.style.width = `${progress}%`;
             loadingText.innerText = `CONNECTING TO INDORE SERVERS: ${progress}%`;
-        }, 120);
+        }, 80);
 
-        function initSiteAnimations() {
-            const tl = gsap.timeline();
-            
-            tl.to("#preloader", {
-                yPercent: -100,
-                duration: 1.2,
-                ease: "power4.inOut"
-            })
-            .from(".hero-text > *", {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.15,
-                ease: "power3.out"
-            }, "-=0.4")
-            .from(".hero-widgets > div", {
-                scale: 0.8,
-                opacity: 0,
-                rotation: 15,
-                duration: 1.2,
-                stagger: 0.2,
-                ease: "back.out(1.7)"
-            }, "-=0.8");
-
-            gsap.from(".bar-grow", {
-                scaleY: 0,
-                duration: 1.5,
-                stagger: 0.1,
-                ease: "power3.out",
-                delay: 1.5
-            });
-
-            gsap.from("#platform .glass-panel", {
-                scrollTrigger: {
-                    trigger: "#platform",
-                    start: "top 75%",
-                },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.2,
-                ease: "power3.out"
-            });
-
-            gsap.from("#plans .glass-panel", {
-                scrollTrigger: {
-                    trigger: "#plans",
-                    start: "top 75%",
-                },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.2,
-                ease: "power3.out"
-            });
-
-            gsap.from("#founder-img-anim", {
-                scrollTrigger: {
-                    trigger: "#founder",
-                    start: "top 60%",
-                },
-                x: -50,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power4.out"
-            });
-
-            gsap.from(".founder-text > *", {
-                scrollTrigger: {
-                    trigger: "#founder",
-                    start: "top 60%",
-                },
-                x: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.15,
-                ease: "power3.out"
-            });
-        }
-
-        // --- Advanced Three.js Particle Wave ---
+        // Advanced Three.js Particle Wave Background
         const scene = new THREE.Scene();
-        // Fog to blend particles smoothly into the background
-        scene.fog = new THREE.FogExp2(0x030303, 0.02);
-
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance optimization
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.getElementById('webgl-container').appendChild(renderer.domElement);
 
-        // Create Particles
-        const particleCount = 5000;
+        const particleCount = 4000;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
         const colors = new Float32Array(particleCount * 3);
@@ -698,13 +624,14 @@
         const colorCyan = new THREE.Color(0x00F2FE);
 
         let i = 0;
-        for(let ix = 0; ix < 100; ix++) {
+        for(let ix = 0; ix < 80; ix++) {
             for(let iy = 0; iy < 50; iy++) {
-                positions[i] = (ix * 2) - 100;    // x spread
-                positions[i+1] = 0;               // y 
-                positions[i+2] = (iy * 2) - 50;   // z spread
+                positions[i] = (ix * 2.5) - 100;    
+                positions[i+1] = 0;               
+                positions[i+2] = (iy * 2.5) - 60;   
                 
-                const mixedColor = colorGold.clone().lerp(colorCyan, ix / 100);
+                const mixRatio = ix / 80;
+                const mixedColor = colorGold.clone().lerp(colorCyan, mixRatio);
                 colors[i] = mixedColor.r;
                 colors[i+1] = mixedColor.g;
                 colors[i+2] = mixedColor.b;
@@ -717,52 +644,49 @@
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
         const material = new THREE.PointsMaterial({
-            size: 0.15,
+            size: 0.2,
             vertexColors: true,
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.5,
             sizeAttenuation: true
         });
 
         const particles = new THREE.Points(geometry, material);
-        particles.position.y = -12;
-        particles.position.z = -15;
-        particles.rotation.x = 0.25; 
+        particles.position.y = -15;
+        particles.position.z = -20;
+        particles.rotation.x = 0.2; 
         scene.add(particles);
 
-        camera.position.z = 25;
+        camera.position.z = 30;
         camera.position.y = 5;
 
-        // Mouse interaction logic
         let mouseX = 0;
         let mouseY = 0;
         document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - window.innerWidth / 2) * 0.0003;
-            mouseY = (event.clientY - window.innerHeight / 2) * 0.0003;
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.0002;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.0002;
         });
 
         let count = 0;
         function animate() {
             requestAnimationFrame(animate);
 
-            // Fluid wave animation
             const positions = particles.geometry.attributes.position.array;
             let i = 0;
-            for(let ix = 0; ix < 100; ix++) {
+            for(let ix = 0; ix < 80; ix++) {
                 for(let iy = 0; iy < 50; iy++) {
-                    positions[i+1] = (Math.sin((ix + count) * 0.3) * 2) + 
-                                     (Math.sin((iy + count) * 0.5) * 2);
+                    positions[i+1] = (Math.sin((ix + count) * 0.3) * 2.5) + 
+                                     (Math.sin((iy + count) * 0.4) * 2.5);
                     i += 3;
                 }
             }
             particles.geometry.attributes.position.needsUpdate = true;
             
-            // Camera parallax based on mouse
-            camera.position.x += (mouseX * 15 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY * 15 + 5 - camera.position.y) * 0.05;
+            camera.position.x += (mouseX * 20 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 20 + 5 - camera.position.y) * 0.05;
             camera.lookAt(scene.position);
 
-            count += 0.04;
+            count += 0.03;
             renderer.render(scene, camera);
         }
         
