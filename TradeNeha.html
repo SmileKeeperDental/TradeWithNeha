@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEHA | Advanced Quantum Trading</title>
+    
+    <!-- CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --dark: #030303;
+            --panel: rgba(20, 20, 20, 0.6);
+            --neon-cyan: #00F2FE;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark);
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+        }
+
+        h1, h2, h3, .brand-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--gold);
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--gold-light);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* 3D Canvas Background */
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loader-line {
+            width: 200px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loader-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--gold);
+        }
+
+        /* Advanced UI Elements */
+        .glass-panel {
+            background: var(--panel);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 2px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, var(--gold-light), var(--gold), #996515);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Ticker Animation */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(0,0,0,0.8);
+            border-top: 1px solid rgba(212,175,55,0.2);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding: 10px 0;
+            white-space: nowrap;
+        }
+        .ticker {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        /* Abstract Image Replacement for Founder */
+        .founder-img-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        .founder-img-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(212,175,55,0.2), transparent);
+            z-index: 1;
+        }
+        .founder-img-bg {
+            background-image: url('https://images.unsplash.com/photo-1611095965415-397a61d6bc08?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) contrast(1.2);
+            transition: filter 0.5s ease;
+        }
+        .founder-img-container:hover .founder-img-bg {
+            filter: grayscale(0%) contrast(1.1);
+        }
+
+        /* Glowing Button */
+        .cyber-btn {
+            position: relative;
+            padding: 15px 40px;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 12px;
+            font-weight: 700;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+            transition: all 0.5s ease;
+        }
+        .cyber-btn:hover::before {
+            left: 100%;
+        }
+        .cyber-btn:hover {
+            background: rgba(212,175,55,0.1);
+            box-shadow: 0 0 20px rgba(212,175,55,0.4);
+        }
+
+        /* Chart Bar Animations */
+        .bar-grow { transform-origin: bottom; }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <h2 class="text-3xl tracking-[0.5em] text-white/50 mb-4 brand-font">NEHA</h2>
+        <p class="text-xs tracking-widest text-[#D4AF37]">INITIALIZING QUANTUM TERMINAL</p>
+        <div class="loader-line">
+            <div class="loader-progress" id="progress-bar"></div>
+        </div>
+        <p class="mt-4 text-xs font-mono text-white/30" id="loading-text">CONNECTING TO INDORE SERVERS: 0%</p>
+    </div>
+
+    <!-- 3D Particle Canvas -->
+    <div id="webgl-container"></div>
+
+    <!-- Main Navigation -->
+    <nav class="fixed w-full z-50 mix-blend-difference top-0 py-6 px-10 flex justify-between items-center">
+        <div class="brand-font text-3xl font-bold tracking-widest">
+            NEHA<span class="text-[#D4AF37]">.</span>
+        </div>
+        <div class="hidden md:flex space-x-12 text-xs tracking-[0.2em] uppercase font-semibold">
+            <a href="#platform" class="hover:text-[#D4AF37] transition">Platform</a>
+            <a href="#analytics" class="hover:text-[#D4AF37] transition">Analytics</a>
+            <a href="#founder" class="hover:text-[#D4AF37] transition">Founder</a>
+        </div>
+        <div>
+            <button class="cyber-btn hidden md:block">Access Terminal</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <div class="max-w-[90rem] mx-auto px-10 w-full z-10 grid md:grid-cols-12 gap-8 items-center">
+            
+            <div class="md:col-span-7 hero-text">
+                <div class="inline-block border border-[#D4AF37]/30 px-4 py-1 rounded-full text-[10px] tracking-widest text-[#D4AF37] mb-8 bg-black/50 backdrop-blur-md">
+                    OPERATING FROM INDORE, INDIA • GLOBAL REACH
+                </div>
+                <h1 class="text-6xl md:text-8xl font-black leading-[1.1] mb-6 tracking-tight">
+                    THE APEX OF <br>
+                    <span class="gold-text">QUANTUM TRADING.</span>
+                </h1>
+                <p class="text-lg text-white/60 max-w-xl font-light leading-relaxed mb-10">
+                    Proprietary algorithmic execution, 3D market visualization, and institutional-grade analytics tailored for the absolute elite. Welcome to the future of wealth architecture.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <button class="cyber-btn">Initialize Portfolio</button>
+                    <a href="#" class="text-xs tracking-widest uppercase hover:text-[#D4AF37] transition flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Watch Engine Demo
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Floating UI Mockups -->
+            <div class="md:col-span-5 relative h-[500px] hidden md:block hero-widgets">
+                <!-- Widget 1 -->
+                <div class="absolute top-10 right-0 glass-panel p-6 w-72 transform rotate-2 hover:rotate-0 transition duration-500 z-20">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] tracking-widest text-white/50">NEHA AI PREDICTION</span>
+                        <span class="text-green-400 text-xs font-bold">+18.4%</span>
+                    </div>
+                    <div class="flex items-end space-x-2 h-24 mt-4">
+                        <div class="w-1/6 bg-white/10 h-[30%] bar-grow"></div>
+                        <div class="w-1/6 bg-white/10 h-[50%] bar-grow"></div>
+                        <div class="w-1/6 bg-white/10 h-[40%] bar-grow"></div>
+                        <div class="w-1/6 bg-white/10 h-[70%] bar-grow"></div>
+                        <div class="w-1/6 bg-white/10 h-[60%] bar-grow"></div>
+                        <div class="w-1/6 bg-[#D4AF37] h-[100%] bar-grow shadow-[0_0_15px_#D4AF37]"></div>
+                    </div>
+                </div>
+                
+                <!-- Widget 2 -->
+                <div class="absolute bottom-20 left-10 glass-panel p-6 w-80 transform -rotate-3 hover:rotate-0 transition duration-500 z-30">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-10 h-10 rounded-full border border-[#D4AF37] flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold tracking-wider">EXECUTION SPEED</h4>
+                            <p class="text-xs text-white/50 font-mono">0.0024ms Latency</p>
+                        </div>
+                    </div>
+                    <div class="w-full bg-white/5 h-1 relative">
+                        <div class="absolute top-0 left-0 h-full w-[95%] bg-gradient-to-r from-transparent to-[var(--neon-cyan)] shadow-[0_0_10px_var(--neon-cyan)]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infinite Market Ticker -->
+    <div class="ticker-wrap relative z-10 font-mono text-sm tracking-wider">
+        <div class="ticker">
+            <span class="mx-8 text-white/50">NIFTY50 <span class="text-green-400">▲ 22,453.20 (+1.2%)</span></span> • 
+            <span class="mx-8 text-white/50">SENSEX <span class="text-green-400">▲ 73,982.50 (+1.4%)</span></span> • 
+            <span class="mx-8 text-[#D4AF37]">NEHA-CORE ALGO <span class="text-green-400">▲ +8.4% (24H)</span></span> • 
+            <span class="mx-8 text-white/50">NASDAQ <span class="text-red-400">▼ 16,234.10 (-0.3%)</span></span> • 
+            <span class="mx-8 text-white/50">GOLD <span class="text-green-400">▲ 2,345.80 (+0.8%)</span></span> •
+            <!-- Duplicate for infinite effect -->
+            <span class="mx-8 text-white/50">NIFTY50 <span class="text-green-400">▲ 22,453.20 (+1.2%)</span></span> • 
+            <span class="mx-8 text-white/50">SENSEX <span class="text-green-400">▲ 73,982.50 (+1.4%)</span></span> • 
+            <span class="mx-8 text-[#D4AF37]">NEHA-CORE ALGO <span class="text-green-400">▲ +8.4% (24H)</span></span> • 
+            <span class="mx-8 text-white/50">NASDAQ <span class="text-red-400">▼ 16,234.10 (-0.3%)</span></span> • 
+            <span class="mx-8 text-white/50">GOLD <span class="text-green-400">▲ 2,345.80 (+0.8%)</span></span>
+        </div>
+    </div>
+
+    <!-- The Indore Command Center (Features) -->
+    <section id="platform" class="py-32 relative z-10">
+        <div class="max-w-[90rem] mx-auto px-10">
+            <div class="mb-20">
+                <p class="text-[#D4AF37] tracking-[0.3em] text-xs mb-4 uppercase">System Architecture</p>
+                <h2 class="text-4xl md:text-6xl font-bold mb-6">THE INDORE <br><span class="text-white/30">COMMAND CENTER</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-panel p-10 group cursor-pointer">
+                    <h3 class="text-6xl font-black text-white/5 mb-6 group-hover:text-[#D4AF37]/20 transition duration-500">01</h3>
+                    <h4 class="text-xl font-bold mb-4 brand-font">Neural Prediction</h4>
+                    <p class="text-white/50 text-sm leading-relaxed">Our AI cluster processes millions of data points across global markets, anticipating micro-trends before human traders react.</p>
+                </div>
+                
+                <div class="glass-panel p-10 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <h3 class="text-6xl font-black text-white/5 mb-6 group-hover:text-[#D4AF37]/20 transition duration-500">02</h3>
+                    <h4 class="text-xl font-bold mb-4 brand-font">3D Visual Analytics</h4>
+                    <p class="text-white/50 text-sm leading-relaxed">Move beyond 2D charts. Analyze portfolio topography in three dimensions, mapping risk and liquidity dynamically.</p>
+                </div>
+
+                <div class="glass-panel p-10 group cursor-pointer">
+                    <h3 class="text-6xl font-black text-white/5 mb-6 group-hover:text-[#D4AF37]/20 transition duration-500">03</h3>
+                    <h4 class="text-xl font-bold mb-4 brand-font">Quantum Encryption</h4>
+                    <p class="text-white/50 text-sm leading-relaxed">Your capital is secured by military-grade, decentralized protocols ensuring absolute anonymity and asset safety.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder Section (Editorial Layout) -->
+    <section id="founder" class="py-32 relative z-10 bg-black/80 backdrop-blur-xl border-y border-white/5">
+        <div class="max-w-[90rem] mx-auto px-10">
+            <div class="grid md:grid-cols-2 gap-20 items-center">
+                <!-- Image Wrapper -->
+                <div class="founder-img-container h-[600px] w-full shadow-2xl relative" id="founder-img">
+                    <div class="absolute inset-0 founder-img-bg w-full h-full"></div>
+                    <div class="absolute bottom-6 left-6 z-20">
+                        <div class="bg-black/80 backdrop-blur-md px-6 py-3 border border-white/10">
+                            <p class="text-[#D4AF37] text-[10px] tracking-widest uppercase">Location Status</p>
+                            <p class="font-bold tracking-wider">INDORE, MP, INDIA</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Founder Content -->
+                <div class="founder-text">
+                    <div class="flex items-center space-x-4 mb-8">
+                        <div class="w-12 h-[1px] bg-[#D4AF37]"></div>
+                        <span class="text-[#D4AF37] tracking-[0.3em] text-xs uppercase font-bold">The Visionary</span>
+                    </div>
+                    <h2 class="text-5xl md:text-7xl font-bold mb-2 brand-font">NEHA</h2>
+                    <p class="text-xl text-white/30 font-light italic mb-10 brand-font">Founder & Chief Architect</p>
+                    
+                    <div class="space-y-6 text-white/60 font-light leading-relaxed mb-12 text-sm md:text-base">
+                        <p>
+                            "True market dominance isn't found in reacting to the present; it's engineered by calculating the future. When we established our headquarters in Indore, the goal was simple: build a trading engine so advanced, it renders traditional platforms obsolete."
+                        </p>
+                        <p>
+                            Combining algorithmic precision with aggressive risk management, Neha has cultivated an ecosystem where high-net-worth capital is not just protected, but exponentially multiplied through proprietary dark-pool technologies.
+                        </p>
+                    </div>
+                    
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Signature_of_John_Hancock.svg" alt="Signature" class="h-12 opacity-30 invert mix-blend-screen mb-8">
+                    
+                    <button class="cyber-btn">Read the Manifesto</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 relative z-10 bg-black border-t border-[#D4AF37]/10">
+        <div class="max-w-[90rem] mx-auto px-10 flex flex-col md:flex-row justify-between items-center">
+            <div class="brand-font text-2xl font-bold tracking-widest mb-6 md:mb-0">
+                NEHA<span class="text-[#D4AF37]">.</span>
+            </div>
+            <div class="text-[10px] text-white/30 tracking-widest uppercase text-center md:text-left">
+                © 2026 NEHA QUANTUM TRADING. REGULATED ENTITY. <br>
+                INDORE, MADHYA PRADESH, INDIA.
+            </div>
+            <div class="flex space-x-8 mt-6 md:mt-0 text-xs tracking-widest uppercase font-semibold text-white/50">
+                <a href="#" class="hover:text-[#D4AF37] transition">Terminal</a>
+                <a href="#" class="hover:text-[#D4AF37] transition">Legal</a>
+                <a href="#" class="hover:text-[#D4AF37] transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script>
+        // --- Custom Cursor Logic ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            // Slight delay for outline
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Add hover effect on buttons/links
+        const links = document.querySelectorAll('a, button, .glass-panel');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursorOutline.style.width = '60px';
+                cursorOutline.style.height = '60px';
+                cursorOutline.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+            });
+            link.addEventListener('mouseleave', () => {
+                cursorOutline.style.width = '40px';
+                cursorOutline.style.height = '40px';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // --- Preloader & GSAP Initialization ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        const loadingText = document.getElementById('loading-text');
+        
+        const loaderInterval = setInterval(() => {
+            progress += Math.floor(Math.random() * 10) + 1;
+            if(progress >= 100) {
+                progress = 100;
+                clearInterval(loaderInterval);
+                initSiteAnimations();
+            }
+            progressBar.style.width = `${progress}%`;
+            loadingText.innerText = `CONNECTING TO INDORE SERVERS: ${progress}%`;
+        }, 150);
+
+        function initSiteAnimations() {
+            const tl = gsap.timeline();
+            
+            // Hide Preloader
+            tl.to("#preloader", {
+                yPercent: -100,
+                duration: 1,
+                ease: "power4.inOut"
+            })
+            // Hero Text Reveal
+            .from(".hero-text > *", {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: "power3.out"
+            }, "-=0.2")
+            // Hero Widgets Animate in
+            .from(".hero-widgets > div", {
+                scale: 0.8,
+                opacity: 0,
+                rotation: 15,
+                duration: 1.2,
+                stagger: 0.2,
+                ease: "back.out(1.7)"
+            }, "-=0.8");
+
+            // Chart Bars animation inside widget
+            gsap.from(".bar-grow", {
+                scaleY: 0,
+                duration: 1.5,
+                stagger: 0.1,
+                ease: "power3.out",
+                delay: 2
+            });
+
+            // Scroll Animations for sections
+            gsap.from("#platform .glass-panel", {
+                scrollTrigger: {
+                    trigger: "#platform",
+                    start: "top 70%",
+                },
+                y: 100,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+
+            gsap.from("#founder-img", {
+                scrollTrigger: {
+                    trigger: "#founder",
+                    start: "top 60%",
+                },
+                x: -100,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power4.out"
+            });
+
+            gsap.from(".founder-text > *", {
+                scrollTrigger: {
+                    trigger: "#founder",
+                    start: "top 60%",
+                },
+                x: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: "power3.out"
+            });
+        }
+
+        // --- Advanced Three.js Particle Wave ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('webgl-container').appendChild(renderer.domElement);
+
+        // Create Particles
+        const particleCount = 4000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        
+        const colorGold = new THREE.Color(0xD4AF37);
+        const colorCyan = new THREE.Color(0x00F2FE);
+
+        let i = 0;
+        for(let ix = 0; ix < 80; ix++) {
+            for(let iy = 0; iy < 50; iy++) {
+                positions[i] = (ix * 2) - 80;     // x
+                positions[i+1] = 0;               // y (will be animated)
+                positions[i+2] = (iy * 2) - 50;   // z
+                
+                // Mix colors based on position
+                const mixedColor = colorGold.clone().lerp(colorCyan, ix / 80);
+                colors[i] = mixedColor.r;
+                colors[i+1] = mixedColor.g;
+                colors[i+2] = mixedColor.b;
+                
+                i += 3;
+            }
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        // Create material with circular points
+        const material = new THREE.PointsMaterial({
+            size: 0.2,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.6,
+            sizeAttenuation: true
+        });
+
+        const particles = new THREE.Points(geometry, material);
+        particles.position.y = -10;
+        particles.position.z = -20;
+        particles.rotation.x = 0.2; // Angle slightly down
+        scene.add(particles);
+
+        camera.position.z = 20;
+        camera.position.y = 5;
+
+        // Mouse interaction logic
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.0005;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.0005;
+        });
+
+        let count = 0;
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate wave
+            const positions = particles.geometry.attributes.position.array;
+            let i = 0;
+            for(let ix = 0; ix < 80; ix++) {
+                for(let iy = 0; iy < 50; iy++) {
+                    // Complex sine wave for fluid motion
+                    positions[i+1] = (Math.sin((ix + count) * 0.3) * 2) + 
+                                     (Math.sin((iy + count) * 0.5) * 2);
+                    i += 3;
+                }
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            
+            // Camera parralax based on mouse
+            camera.position.x += (mouseX * 10 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 10 + 5 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            count += 0.05;
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // Responsive handling
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
