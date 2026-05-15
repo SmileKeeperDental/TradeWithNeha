@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEHA | Advanced Quantum Trading</title>
+    <title>Trade With Neha | Advanced Quantum Trading</title>
     
-    <!-- CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Premium Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -30,7 +28,8 @@
             color: #ffffff;
             font-family: 'Space Grotesk', sans-serif;
             overflow-x: hidden;
-            cursor: none; /* Custom cursor */
+            cursor: none;
+            scroll-behavior: smooth;
         }
 
         h1, h2, h3, .brand-font {
@@ -68,7 +67,7 @@
             height: 100vh;
             z-index: -1;
             pointer-events: none;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            background: radial-gradient(circle at center, #111 0%, #030303 100%);
         }
 
         /* Preloader */
@@ -87,7 +86,7 @@
             width: 200px;
             height: 2px;
             background: rgba(255,255,255,0.1);
-            margin-top: 20px;
+            margin-top: 30px;
             position: relative;
             overflow: hidden;
         }
@@ -107,8 +106,15 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 2px;
+            border-radius: 4px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.1);
         }
 
         .gold-text {
@@ -124,7 +130,7 @@
             background: rgba(0,0,0,0.8);
             border-top: 1px solid rgba(212,175,55,0.2);
             border-bottom: 1px solid rgba(212,175,55,0.2);
-            padding: 10px 0;
+            padding: 12px 0;
             white-space: nowrap;
         }
         .ticker {
@@ -136,28 +142,32 @@
             100% { transform: translate3d(-50%, 0, 0); }
         }
 
-        /* Abstract Image Replacement for Founder */
-        .founder-img-container {
+        /* Founder Image Enhancements */
+        .founder-img-wrapper {
             position: relative;
+            border-radius: 4px;
             overflow: hidden;
-            border-radius: 2px;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
-        .founder-img-container::before {
+        
+        .founder-img-wrapper::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(45deg, rgba(212,175,55,0.2), transparent);
-            z-index: 1;
+            background: linear-gradient(to top, #030303 10%, transparent 50%, rgba(212,175,55,0.1) 100%);
+            pointer-events: none;
         }
-        .founder-img-bg {
-            background-image: url('https://images.unsplash.com/photo-1611095965415-397a61d6bc08?q=80&w=1000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%) contrast(1.2);
-            transition: filter 0.5s ease;
+
+        .founder-image-styled {
+            /* Enhancing the provided image */
+            filter: contrast(1.15) brightness(1.05) saturate(1.1);
+            transition: filter 0.5s ease, transform 0.7s ease;
         }
-        .founder-img-container:hover .founder-img-bg {
-            filter: grayscale(0%) contrast(1.1);
+        
+        .founder-img-wrapper:hover .founder-image-styled {
+            filter: contrast(1.2) brightness(1.1) saturate(1.2);
+            transform: scale(1.03);
         }
 
         /* Glowing Button */
@@ -173,6 +183,13 @@
             font-weight: 700;
             overflow: hidden;
             transition: all 0.3s ease;
+            cursor: none;
+            display: inline-block;
+        }
+        .cyber-btn-solid {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 20px rgba(212,175,55,0.3);
         }
         .cyber-btn::before {
             content: '';
@@ -181,86 +198,120 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: all 0.5s ease;
         }
         .cyber-btn:hover::before {
             left: 100%;
         }
-        .cyber-btn:hover {
+        .cyber-btn:hover:not(.cyber-btn-solid) {
             background: rgba(212,175,55,0.1);
             box-shadow: 0 0 20px rgba(212,175,55,0.4);
         }
+        .cyber-btn-solid:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 30px rgba(212,175,55,0.6);
+        }
 
-        /* Chart Bar Animations */
         .bar-grow { transform-origin: bottom; }
     </style>
 </head>
 <body>
 
-    <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- Preloader -->
     <div id="preloader">
-        <h2 class="text-3xl tracking-[0.5em] text-white/50 mb-4 brand-font">NEHA</h2>
-        <p class="text-xs tracking-widest text-[#D4AF37]">INITIALIZING QUANTUM TERMINAL</p>
+        <div class="flex items-center space-x-4 mb-4">
+            <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-pulse">
+                <defs>
+                    <linearGradient id="goldPreloader" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F3E5AB" />
+                        <stop offset="50%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#996515" />
+                    </linearGradient>
+                </defs>
+                <path d="M50 5L89 27.5V72.5L50 95L11 72.5V27.5L50 5Z" stroke="url(#goldPreloader)" stroke-width="2" fill="none"/>
+                <path d="M35 65V35L65 65V35" stroke="url(#goldPreloader)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M65 35H45M65 35V55" stroke="url(#goldPreloader)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="flex flex-col justify-center">
+                <span class="brand-font text-2xl font-bold tracking-[0.15em] leading-none text-white/50 uppercase">Trade With</span>
+                <span class="text-[12px] tracking-[0.4em] text-[#D4AF37] font-semibold mt-1 uppercase">Neha</span>
+            </div>
+        </div>
+        <p class="text-xs tracking-widest text-[#D4AF37]/70 mt-4">INITIALIZING QUANTUM TERMINAL</p>
         <div class="loader-line">
             <div class="loader-progress" id="progress-bar"></div>
         </div>
         <p class="mt-4 text-xs font-mono text-white/30" id="loading-text">CONNECTING TO INDORE SERVERS: 0%</p>
     </div>
 
-    <!-- 3D Particle Canvas -->
     <div id="webgl-container"></div>
 
-    <!-- Main Navigation -->
     <nav class="fixed w-full z-50 mix-blend-difference top-0 py-6 px-10 flex justify-between items-center">
-        <div class="brand-font text-3xl font-bold tracking-widest">
-            NEHA<span class="text-[#D4AF37]">.</span>
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="transform group-hover:scale-110 transition duration-500">
+                <defs>
+                    <linearGradient id="goldNav" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F3E5AB" />
+                        <stop offset="50%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#996515" />
+                    </linearGradient>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <path d="M50 5L89 27.5V72.5L50 95L11 72.5V27.5L50 5Z" stroke="url(#goldNav)" stroke-width="3" fill="rgba(212,175,55,0.05)" filter="url(#glow)"/>
+                <path d="M35 65V35L65 65V35" stroke="url(#goldNav)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M65 35H45M65 35V55" stroke="url(#goldNav)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="flex flex-col justify-center">
+                <span class="brand-font text-xl font-bold tracking-[0.15em] leading-none gold-text uppercase">Trade With</span>
+                <span class="text-[10px] tracking-[0.4em] text-white/70 font-semibold mt-1 uppercase">Neha</span>
+            </div>
         </div>
+
         <div class="hidden md:flex space-x-12 text-xs tracking-[0.2em] uppercase font-semibold">
-            <a href="#platform" class="hover:text-[#D4AF37] transition">Platform</a>
-            <a href="#analytics" class="hover:text-[#D4AF37] transition">Analytics</a>
-            <a href="#founder" class="hover:text-[#D4AF37] transition">Founder</a>
+            <a href="#platform" class="hover:text-[#D4AF37] transition">The Platform</a>
+            <a href="#plans" class="hover:text-[#D4AF37] transition">Trading Plans</a>
+            <a href="#founder" class="hover:text-[#D4AF37] transition">Meet The Founder</a>
         </div>
         <div>
-            <button class="cyber-btn hidden md:block">Access Terminal</button>
+            <a href="#plans" class="cyber-btn cyber-btn-solid hidden md:inline-block text-black">Start Trading Journey</a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
         <div class="max-w-[90rem] mx-auto px-10 w-full z-10 grid md:grid-cols-12 gap-8 items-center">
             
             <div class="md:col-span-7 hero-text">
-                <div class="inline-block border border-[#D4AF37]/30 px-4 py-1 rounded-full text-[10px] tracking-widest text-[#D4AF37] mb-8 bg-black/50 backdrop-blur-md">
+                <div class="inline-flex items-center border border-[#D4AF37]/30 px-4 py-1.5 rounded-full text-[10px] tracking-widest text-[#D4AF37] mb-8 bg-black/50 backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-3 animate-pulse"></span>
                     OPERATING FROM INDORE, INDIA • GLOBAL REACH
                 </div>
                 <h1 class="text-6xl md:text-8xl font-black leading-[1.1] mb-6 tracking-tight">
-                    THE APEX OF <br>
-                    <span class="gold-text">QUANTUM TRADING.</span>
+                    MASTER THE <br>
+                    <span class="gold-text">MARKETS.</span>
                 </h1>
                 <p class="text-lg text-white/60 max-w-xl font-light leading-relaxed mb-10">
-                    Proprietary algorithmic execution, 3D market visualization, and institutional-grade analytics tailored for the absolute elite. Welcome to the future of wealth architecture.
+                    Welcome to the apex of wealth architecture. We provide proprietary strategies, actionable insights, and high-end setups for Intraday F&O, Swing, and Composite trading.
                 </p>
-                <div class="flex items-center space-x-6">
-                    <button class="cyber-btn">Initialize Portfolio</button>
-                    <a href="#" class="text-xs tracking-widest uppercase hover:text-[#D4AF37] transition flex items-center">
+                <div class="flex flex-wrap items-center gap-6">
+                    <a href="#plans" class="cyber-btn cyber-btn-solid text-black">Start Your Trading Journey</a>
+                    <a href="#platform" class="text-xs tracking-widest uppercase hover:text-[#D4AF37] transition flex items-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Watch Engine Demo
+                        Explore Edge
                     </a>
                 </div>
             </div>
 
-            <!-- Hero Floating UI Mockups -->
             <div class="md:col-span-5 relative h-[500px] hidden md:block hero-widgets">
-                <!-- Widget 1 -->
-                <div class="absolute top-10 right-0 glass-panel p-6 w-72 transform rotate-2 hover:rotate-0 transition duration-500 z-20">
+                <div class="absolute top-10 right-0 glass-panel p-6 w-72 transform rotate-2 hover:rotate-0 z-20">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] tracking-widest text-white/50">NEHA AI PREDICTION</span>
-                        <span class="text-green-400 text-xs font-bold">+18.4%</span>
+                        <span class="text-[10px] tracking-widest text-white/50">F&O ALGO SIGNAL</span>
+                        <span class="text-green-400 text-xs font-bold">BULLISH</span>
                     </div>
                     <div class="flex items-end space-x-2 h-24 mt-4">
                         <div class="w-1/6 bg-white/10 h-[30%] bar-grow"></div>
@@ -272,15 +323,14 @@
                     </div>
                 </div>
                 
-                <!-- Widget 2 -->
-                <div class="absolute bottom-20 left-10 glass-panel p-6 w-80 transform -rotate-3 hover:rotate-0 transition duration-500 z-30">
+                <div class="absolute bottom-20 left-10 glass-panel p-6 w-80 transform -rotate-3 hover:rotate-0 z-30">
                     <div class="flex items-center space-x-4 mb-6">
                         <div class="w-10 h-10 rounded-full border border-[#D4AF37] flex items-center justify-center">
                             <svg class="w-5 h-5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
                         <div>
-                            <h4 class="text-sm font-bold tracking-wider">EXECUTION SPEED</h4>
-                            <p class="text-xs text-white/50 font-mono">0.0024ms Latency</p>
+                            <h4 class="text-sm font-bold tracking-wider">MARKET EXECUTION</h4>
+                            <p class="text-xs text-white/50 font-mono">Precision Entry Models</p>
                         </div>
                     </div>
                     <div class="w-full bg-white/5 h-1 relative">
@@ -291,114 +341,211 @@
         </div>
     </section>
 
-    <!-- Infinite Market Ticker -->
     <div class="ticker-wrap relative z-10 font-mono text-sm tracking-wider">
         <div class="ticker">
-            <span class="mx-8 text-white/50">NIFTY50 <span class="text-green-400">▲ 22,453.20 (+1.2%)</span></span> • 
-            <span class="mx-8 text-white/50">SENSEX <span class="text-green-400">▲ 73,982.50 (+1.4%)</span></span> • 
-            <span class="mx-8 text-[#D4AF37]">NEHA-CORE ALGO <span class="text-green-400">▲ +8.4% (24H)</span></span> • 
-            <span class="mx-8 text-white/50">NASDAQ <span class="text-red-400">▼ 16,234.10 (-0.3%)</span></span> • 
-            <span class="mx-8 text-white/50">GOLD <span class="text-green-400">▲ 2,345.80 (+0.8%)</span></span> •
-            <!-- Duplicate for infinite effect -->
-            <span class="mx-8 text-white/50">NIFTY50 <span class="text-green-400">▲ 22,453.20 (+1.2%)</span></span> • 
-            <span class="mx-8 text-white/50">SENSEX <span class="text-green-400">▲ 73,982.50 (+1.4%)</span></span> • 
-            <span class="mx-8 text-[#D4AF37]">NEHA-CORE ALGO <span class="text-green-400">▲ +8.4% (24H)</span></span> • 
-            <span class="mx-8 text-white/50">NASDAQ <span class="text-red-400">▼ 16,234.10 (-0.3%)</span></span> • 
-            <span class="mx-8 text-white/50">GOLD <span class="text-green-400">▲ 2,345.80 (+0.8%)</span></span>
+            <span class="mx-8 text-white/50">BANKNIFTY <span class="text-green-400">▲ 48,253.20 (+1.2%)</span></span> • 
+            <span class="mx-8 text-white/50">NIFTY50 <span class="text-green-400">▲ 22,482.50 (+1.4%)</span></span> • 
+            <span class="mx-8 text-[#D4AF37]">NEHA VIP CALL <span class="text-green-400">TARGET HIT</span></span> • 
+            <span class="mx-8 text-white/50">FINNIFTY <span class="text-red-400">▼ 21,234.10 (-0.3%)</span></span> • 
+            <span class="mx-8 text-white/50">MIDCPNIFTY <span class="text-green-400">▲ 10,845.80 (+0.8%)</span></span> •
+            <span class="mx-8 text-white/50">BANKNIFTY <span class="text-green-400">▲ 48,253.20 (+1.2%)</span></span> • 
+            <span class="mx-8 text-white/50">NIFTY50 <span class="text-green-400">▲ 22,482.50 (+1.4%)</span></span> • 
+            <span class="mx-8 text-[#D4AF37]">NEHA VIP CALL <span class="text-green-400">TARGET HIT</span></span> • 
+            <span class="mx-8 text-white/50">FINNIFTY <span class="text-red-400">▼ 21,234.10 (-0.3%)</span></span> • 
+            <span class="mx-8 text-white/50">MIDCPNIFTY <span class="text-green-400">▲ 10,845.80 (+0.8%)</span></span>
         </div>
     </div>
 
-    <!-- The Indore Command Center (Features) -->
     <section id="platform" class="py-32 relative z-10">
         <div class="max-w-[90rem] mx-auto px-10">
-            <div class="mb-20">
-                <p class="text-[#D4AF37] tracking-[0.3em] text-xs mb-4 uppercase">System Architecture</p>
-                <h2 class="text-4xl md:text-6xl font-bold mb-6">THE INDORE <br><span class="text-white/30">COMMAND CENTER</span></h2>
+            <div class="mb-20 text-center md:text-left flex flex-col md:flex-row justify-between items-end">
+                <div>
+                    <p class="text-[#D4AF37] tracking-[0.3em] text-xs mb-4 uppercase">The Edge</p>
+                    <h2 class="text-4xl md:text-6xl font-bold mb-4">A NEW STANDARD IN <br><span class="text-white/30">MARKET ANALYSIS</span></h2>
+                </div>
+                <p class="text-white/50 max-w-md text-sm leading-relaxed pb-2">
+                    We don't just follow trends; we identify the footprints of institutional capital to position our clients ahead of the curve.
+                </p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-panel p-10 group cursor-pointer">
-                    <h3 class="text-6xl font-black text-white/5 mb-6 group-hover:text-[#D4AF37]/20 transition duration-500">01</h3>
-                    <h4 class="text-xl font-bold mb-4 brand-font">Neural Prediction</h4>
-                    <p class="text-white/50 text-sm leading-relaxed">Our AI cluster processes millions of data points across global markets, anticipating micro-trends before human traders react.</p>
+                <div class="glass-panel p-10">
+                    <div class="w-14 h-14 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-6 border border-[#D4AF37]/30">
+                        <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4 brand-font">Institutional Flow</h4>
+                    <p class="text-white/50 text-sm leading-relaxed">Decode order book imbalances and track smart money movements to execute trades with mathematical precision.</p>
                 </div>
                 
-                <div class="glass-panel p-10 group cursor-pointer relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                    <h3 class="text-6xl font-black text-white/5 mb-6 group-hover:text-[#D4AF37]/20 transition duration-500">02</h3>
-                    <h4 class="text-xl font-bold mb-4 brand-font">3D Visual Analytics</h4>
-                    <p class="text-white/50 text-sm leading-relaxed">Move beyond 2D charts. Analyze portfolio topography in three dimensions, mapping risk and liquidity dynamically.</p>
+                <div class="glass-panel p-10">
+                    <div class="w-14 h-14 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-6 border border-[#D4AF37]/30">
+                        <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4 brand-font">Risk Management</h4>
+                    <p class="text-white/50 text-sm leading-relaxed">Every setup is accompanied by strict RR (Risk-to-Reward) frameworks, ensuring capital preservation is always the priority.</p>
                 </div>
 
-                <div class="glass-panel p-10 group cursor-pointer">
-                    <h3 class="text-6xl font-black text-white/5 mb-6 group-hover:text-[#D4AF37]/20 transition duration-500">03</h3>
-                    <h4 class="text-xl font-bold mb-4 brand-font">Quantum Encryption</h4>
-                    <p class="text-white/50 text-sm leading-relaxed">Your capital is secured by military-grade, decentralized protocols ensuring absolute anonymity and asset safety.</p>
+                <div class="glass-panel p-10">
+                    <div class="w-14 h-14 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-6 border border-[#D4AF37]/30">
+                        <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4 brand-font">Live Community</h4>
+                    <p class="text-white/50 text-sm leading-relaxed">Join a highly curated, premium ecosystem of dedicated traders navigating live market hours together.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Founder Section (Editorial Layout) -->
-    <section id="founder" class="py-32 relative z-10 bg-black/80 backdrop-blur-xl border-y border-white/5">
+    <section id="plans" class="py-32 relative z-10 bg-black/40 border-y border-[#D4AF37]/10">
         <div class="max-w-[90rem] mx-auto px-10">
-            <div class="grid md:grid-cols-2 gap-20 items-center">
-                <!-- Image Wrapper -->
-                <div class="founder-img-container h-[600px] w-full shadow-2xl relative" id="founder-img">
-                    <div class="absolute inset-0 founder-img-bg w-full h-full"></div>
-                    <div class="absolute bottom-6 left-6 z-20">
-                        <div class="bg-black/80 backdrop-blur-md px-6 py-3 border border-white/10">
-                            <p class="text-[#D4AF37] text-[10px] tracking-widest uppercase">Location Status</p>
-                            <p class="font-bold tracking-wider">INDORE, MP, INDIA</p>
+            <div class="text-center mb-20">
+                <p class="text-[#D4AF37] tracking-[0.3em] text-xs mb-4 uppercase font-bold">Start Your Trading Journey</p>
+                <h2 class="text-4xl md:text-6xl font-bold mb-6 brand-font">ELITE TRADING <span class="gold-text">PLANS</span></h2>
+                <p class="text-white/50 max-w-2xl mx-auto text-sm leading-relaxed">
+                    Choose the architecture that fits your capital size and time commitment. Every plan is engineered for maximum yield and rigorous risk control.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37] rounded-full blur-[80px] opacity-10 group-hover:opacity-30 transition duration-500"></div>
+                    <h3 class="text-2xl font-bold mb-2 brand-font">Swing Trade</h3>
+                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6">Medium Term • High Conviction</p>
+                    <p class="text-white/60 text-sm mb-8 flex-grow">Designed for those who cannot watch screens all day. We capture large, multi-day to multi-week price movements based on structural shifts.</p>
+                    <ul class="space-y-4 mb-10 text-sm text-white/80">
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> 2-4 Premium Setups Weekly</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Detailed Entry/Exit Targets</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Chart Pattern Breakdowns</li>
+                    </ul>
+                    <button class="cyber-btn w-full text-center">Select Plan</button>
+                </div>
+
+                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group border-[#D4AF37]/50 transform md:-translate-y-4 shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515]"></div>
+                    <div class="absolute top-0 right-0 bg-[#D4AF37] text-black text-[10px] font-bold px-3 py-1 uppercase tracking-widest">Most Popular</div>
+                    
+                    <h3 class="text-2xl font-bold mb-2 brand-font">Composite Trade</h3>
+                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6">Portfolio Approach • Diversified</p>
+                    <p class="text-white/60 text-sm mb-8 flex-grow">The ultimate blend. Combines aggressive short-term plays with stable, long-term equity positioning to balance your wealth accumulation.</p>
+                    <ul class="space-y-4 mb-10 text-sm text-white/80">
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Equity & F&O Blend</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Live Market Commentary</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Portfolio Hedging Strategies</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Priority Support Access</li>
+                    </ul>
+                    <button class="cyber-btn cyber-btn-solid w-full text-center">Select Plan</button>
+                </div>
+
+                <div class="glass-panel p-10 flex flex-col relative overflow-hidden group">
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-[var(--neon-cyan)] rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition duration-500"></div>
+                    <h3 class="text-2xl font-bold mb-2 brand-font">Intraday F&O</h3>
+                    <p class="text-[#D4AF37] text-xs tracking-widest uppercase mb-6">High Frequency • Leveraged</p>
+                    <p class="text-white/60 text-sm mb-8 flex-grow">Pure, unadulterated alpha. Capitalize on daily market volatility in Nifty & BankNifty using our precision momentum algorithms.</p>
+                    <ul class="space-y-4 mb-10 text-sm text-white/80">
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Daily Live Index Trades</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Options Buying/Selling Levels</li>
+                        <li class="flex items-center"><span class="text-[#D4AF37] mr-3">✔</span> Expiry Day Hero-Zero Plays</li>
+                    </ul>
+                    <button class="cyber-btn w-full text-center">Select Plan</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="founder" class="py-32 relative z-10 overflow-hidden">
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-full bg-gradient-to-l from-[#D4AF37]/5 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-[90rem] mx-auto px-10">
+            <div class="grid md:grid-cols-12 gap-16 items-center">
+                
+                <div class="md:col-span-5 relative order-2 md:order-1" id="founder-img-anim">
+                    <div class="absolute -inset-4 border border-[#D4AF37]/20 rounded-lg hidden md:block"></div>
+                    <div class="absolute -inset-1 border border-[#D4AF37]/50 rounded-sm hidden md:block translate-x-4 translate-y-4"></div>
+                    
+                    <div class="founder-img-wrapper aspect-[3/4] w-full max-w-md mx-auto z-10">
+                        <img src="image_d25e74.jpg" alt="Founder Neha - Trade With Neha" class="w-full h-full object-cover founder-image-styled">
+                        
+                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[#D4AF37] text-[10px] tracking-[0.2em] uppercase font-bold mb-1">Based In</p>
+                                    <p class="font-bold tracking-wider text-sm text-white">INDORE, MP, INDIA</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full border border-[#D4AF37]/50 flex items-center justify-center backdrop-blur-sm">
+                                    <span class="brand-font text-lg text-[#D4AF37]">N</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Founder Content -->
-                <div class="founder-text">
-                    <div class="flex items-center space-x-4 mb-8">
-                        <div class="w-12 h-[1px] bg-[#D4AF37]"></div>
-                        <span class="text-[#D4AF37] tracking-[0.3em] text-xs uppercase font-bold">The Visionary</span>
+                <div class="md:col-span-7 founder-text order-1 md:order-2 pl-0 md:pl-10">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-16 h-[2px] bg-[#D4AF37]"></div>
+                        <span class="text-[#D4AF37] tracking-[0.3em] text-sm uppercase font-bold">Meet The Visionary</span>
                     </div>
+                    
                     <h2 class="text-5xl md:text-7xl font-bold mb-2 brand-font">NEHA</h2>
-                    <p class="text-xl text-white/30 font-light italic mb-10 brand-font">Founder & Chief Architect</p>
+                    <p class="text-xl text-white/50 font-light italic mb-10 brand-font">Founder & Chief Market Strategist</p>
                     
-                    <div class="space-y-6 text-white/60 font-light leading-relaxed mb-12 text-sm md:text-base">
-                        <p>
-                            "True market dominance isn't found in reacting to the present; it's engineered by calculating the future. When we established our headquarters in Indore, the goal was simple: build a trading engine so advanced, it renders traditional platforms obsolete."
+                    <div class="space-y-6 text-white/70 font-light leading-relaxed mb-12 text-base">
+                        <p class="text-lg text-white font-medium border-l-2 border-[#D4AF37] pl-6 py-2 bg-gradient-to-r from-[#D4AF37]/10 to-transparent">
+                            "Trading is not about predicting the future; it is about executing a flawless edge when the present aligns with our mathematical probabilities."
                         </p>
                         <p>
-                            Combining algorithmic precision with aggressive risk management, Neha has cultivated an ecosystem where high-net-worth capital is not just protected, but exponentially multiplied through proprietary dark-pool technologies.
+                            Operating out of the thriving hub of Indore, Madhya Pradesh, Neha has established a reputation for absolute precision in the financial markets. What began as a personal pursuit of market mastery has evolved into a premium institutional-grade trading ecosystem.
+                        </p>
+                        <p>
+                            Specializing in deep order-flow analysis and dynamic risk structuring, Neha developed the proprietary frameworks that power our <strong>Intraday F&O</strong>, <strong>Swing</strong>, and <strong>Composite</strong> trading plans. Her philosophy is built on removing emotion from the charts, protecting capital ruthlessly, and striking only when the setup offers a massive asymmetrical advantage.
                         </p>
                     </div>
                     
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Signature_of_John_Hancock.svg" alt="Signature" class="h-12 opacity-30 invert mix-blend-screen mb-8">
-                    
-                    <button class="cyber-btn">Read the Manifesto</button>
+                    <div class="flex items-center space-x-6">
+                        <a href="#plans" class="cyber-btn cyber-btn-solid text-black">Trade Alongside Neha</a>
+                        <div class="flex space-x-4 text-white/40">
+                            <a href="#" class="hover:text-[#D4AF37] transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                            <a href="#" class="hover:text-[#D4AF37] transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-12 relative z-10 bg-black border-t border-[#D4AF37]/10">
-        <div class="max-w-[90rem] mx-auto px-10 flex flex-col md:flex-row justify-between items-center">
-            <div class="brand-font text-2xl font-bold tracking-widest mb-6 md:mb-0">
-                NEHA<span class="text-[#D4AF37]">.</span>
+    <footer class="py-16 relative z-10 bg-[#020202] border-t border-[#D4AF37]/20">
+        <div class="max-w-[90rem] mx-auto px-10">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-10">
+                <div class="flex items-center space-x-3 mb-6 md:mb-0 opacity-70 hover:opacity-100 transition duration-300 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5L89 27.5V72.5L50 95L11 72.5V27.5L50 5Z" stroke="#D4AF37" stroke-width="3" fill="transparent"/>
+                        <path d="M35 65V35L65 65V35" stroke="#D4AF37" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M65 35H45M65 35V55" stroke="#D4AF37" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="flex flex-col justify-center">
+                        <span class="brand-font text-lg font-bold tracking-[0.15em] leading-none gold-text uppercase">Trade With</span>
+                        <span class="text-[9px] tracking-[0.4em] text-white/70 font-semibold mt-1 uppercase">Neha</span>
+                    </div>
+                </div>
+
+                <div class="flex space-x-8 text-xs tracking-widest uppercase font-semibold text-white/50">
+                    <a href="#plans" class="hover:text-[#D4AF37] transition">Start Trading</a>
+                    <a href="#" class="hover:text-[#D4AF37] transition">Disclaimer</a>
+                    <a href="#" class="hover:text-[#D4AF37] transition">Terms</a>
+                    <a href="#" class="hover:text-[#D4AF37] transition">Support</a>
+                </div>
             </div>
-            <div class="text-[10px] text-white/30 tracking-widest uppercase text-center md:text-left">
-                © 2026 NEHA QUANTUM TRADING. REGULATED ENTITY. <br>
-                INDORE, MADHYA PRADESH, INDIA.
-            </div>
-            <div class="flex space-x-8 mt-6 md:mt-0 text-xs tracking-widest uppercase font-semibold text-white/50">
-                <a href="#" class="hover:text-[#D4AF37] transition">Terminal</a>
-                <a href="#" class="hover:text-[#D4AF37] transition">Legal</a>
-                <a href="#" class="hover:text-[#D4AF37] transition">Contact</a>
+            
+            <div class="border-t border-white/5 pt-8 text-center flex flex-col items-center">
+                <p class="text-[10px] text-white/30 tracking-widest uppercase mb-2">
+                    © 2026 TRADE WITH NEHA. ALL RIGHTS RESERVED.
+                </p>
+                <p class="text-[10px] text-[#D4AF37]/50 tracking-widest uppercase font-bold">
+                    HEADQUARTERS: INDORE, MADHYA PRADESH, INDIA.
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- Core Scripts -->
     <script>
         // --- Custom Cursor Logic ---
         const cursorDot = document.querySelector('.cursor-dot');
@@ -411,15 +558,13 @@
             cursorDot.style.left = `${posX}px`;
             cursorDot.style.top = `${posY}px`;
             
-            // Slight delay for outline
             cursorOutline.animate({
                 left: `${posX}px`,
                 top: `${posY}px`
             }, { duration: 500, fill: "forwards" });
         });
 
-        // Add hover effect on buttons/links
-        const links = document.querySelectorAll('a, button, .glass-panel');
+        const links = document.querySelectorAll('a, button, .glass-panel, svg');
         links.forEach(link => {
             link.addEventListener('mouseenter', () => {
                 cursorOutline.style.width = '60px';
@@ -441,34 +586,31 @@
         const loadingText = document.getElementById('loading-text');
         
         const loaderInterval = setInterval(() => {
-            progress += Math.floor(Math.random() * 10) + 1;
+            progress += Math.floor(Math.random() * 15) + 1;
             if(progress >= 100) {
                 progress = 100;
                 clearInterval(loaderInterval);
-                initSiteAnimations();
+                setTimeout(initSiteAnimations, 300); // slight delay before hiding
             }
             progressBar.style.width = `${progress}%`;
             loadingText.innerText = `CONNECTING TO INDORE SERVERS: ${progress}%`;
-        }, 150);
+        }, 120);
 
         function initSiteAnimations() {
             const tl = gsap.timeline();
             
-            // Hide Preloader
             tl.to("#preloader", {
                 yPercent: -100,
-                duration: 1,
+                duration: 1.2,
                 ease: "power4.inOut"
             })
-            // Hero Text Reveal
             .from(".hero-text > *", {
                 y: 50,
                 opacity: 0,
                 duration: 1,
                 stagger: 0.15,
                 ease: "power3.out"
-            }, "-=0.2")
-            // Hero Widgets Animate in
+            }, "-=0.4")
             .from(".hero-widgets > div", {
                 scale: 0.8,
                 opacity: 0,
@@ -478,34 +620,44 @@
                 ease: "back.out(1.7)"
             }, "-=0.8");
 
-            // Chart Bars animation inside widget
             gsap.from(".bar-grow", {
                 scaleY: 0,
                 duration: 1.5,
                 stagger: 0.1,
                 ease: "power3.out",
-                delay: 2
+                delay: 1.5
             });
 
-            // Scroll Animations for sections
             gsap.from("#platform .glass-panel", {
                 scrollTrigger: {
                     trigger: "#platform",
-                    start: "top 70%",
+                    start: "top 75%",
                 },
-                y: 100,
+                y: 50,
                 opacity: 0,
                 duration: 1,
                 stagger: 0.2,
                 ease: "power3.out"
             });
 
-            gsap.from("#founder-img", {
+            gsap.from("#plans .glass-panel", {
+                scrollTrigger: {
+                    trigger: "#plans",
+                    start: "top 75%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+
+            gsap.from("#founder-img-anim", {
                 scrollTrigger: {
                     trigger: "#founder",
                     start: "top 60%",
                 },
-                x: -100,
+                x: -50,
                 opacity: 0,
                 duration: 1.5,
                 ease: "power4.out"
@@ -526,15 +678,18 @@
 
         // --- Advanced Three.js Particle Wave ---
         const scene = new THREE.Scene();
+        // Fog to blend particles smoothly into the background
+        scene.fog = new THREE.FogExp2(0x030303, 0.02);
+
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance optimization
         document.getElementById('webgl-container').appendChild(renderer.domElement);
 
         // Create Particles
-        const particleCount = 4000;
+        const particleCount = 5000;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
         const colors = new Float32Array(particleCount * 3);
@@ -543,14 +698,13 @@
         const colorCyan = new THREE.Color(0x00F2FE);
 
         let i = 0;
-        for(let ix = 0; ix < 80; ix++) {
+        for(let ix = 0; ix < 100; ix++) {
             for(let iy = 0; iy < 50; iy++) {
-                positions[i] = (ix * 2) - 80;     // x
-                positions[i+1] = 0;               // y (will be animated)
-                positions[i+2] = (iy * 2) - 50;   // z
+                positions[i] = (ix * 2) - 100;    // x spread
+                positions[i+1] = 0;               // y 
+                positions[i+2] = (iy * 2) - 50;   // z spread
                 
-                // Mix colors based on position
-                const mixedColor = colorGold.clone().lerp(colorCyan, ix / 80);
+                const mixedColor = colorGold.clone().lerp(colorCyan, ix / 100);
                 colors[i] = mixedColor.r;
                 colors[i+1] = mixedColor.g;
                 colors[i+2] = mixedColor.b;
@@ -562,43 +716,40 @@
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-        // Create material with circular points
         const material = new THREE.PointsMaterial({
-            size: 0.2,
+            size: 0.15,
             vertexColors: true,
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.8,
             sizeAttenuation: true
         });
 
         const particles = new THREE.Points(geometry, material);
-        particles.position.y = -10;
-        particles.position.z = -20;
-        particles.rotation.x = 0.2; // Angle slightly down
+        particles.position.y = -12;
+        particles.position.z = -15;
+        particles.rotation.x = 0.25; 
         scene.add(particles);
 
-        camera.position.z = 20;
+        camera.position.z = 25;
         camera.position.y = 5;
 
         // Mouse interaction logic
         let mouseX = 0;
         let mouseY = 0;
         document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - window.innerWidth / 2) * 0.0005;
-            mouseY = (event.clientY - window.innerHeight / 2) * 0.0005;
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.0003;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.0003;
         });
 
         let count = 0;
-        // Animation Loop
         function animate() {
             requestAnimationFrame(animate);
 
-            // Animate wave
+            // Fluid wave animation
             const positions = particles.geometry.attributes.position.array;
             let i = 0;
-            for(let ix = 0; ix < 80; ix++) {
+            for(let ix = 0; ix < 100; ix++) {
                 for(let iy = 0; iy < 50; iy++) {
-                    // Complex sine wave for fluid motion
                     positions[i+1] = (Math.sin((ix + count) * 0.3) * 2) + 
                                      (Math.sin((iy + count) * 0.5) * 2);
                     i += 3;
@@ -606,18 +757,17 @@
             }
             particles.geometry.attributes.position.needsUpdate = true;
             
-            // Camera parralax based on mouse
-            camera.position.x += (mouseX * 10 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY * 10 + 5 - camera.position.y) * 0.05;
+            // Camera parallax based on mouse
+            camera.position.x += (mouseX * 15 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 15 + 5 - camera.position.y) * 0.05;
             camera.lookAt(scene.position);
 
-            count += 0.05;
+            count += 0.04;
             renderer.render(scene, camera);
         }
         
         animate();
 
-        // Responsive handling
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
